@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-from .models import User
+from .models import User, JobPosting
 from . import db, bcrypt
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 api_bp = Blueprint('api', __name__)
 
@@ -41,3 +41,26 @@ def login():
         return jsonify(access_token=access_token), 200
 
     return jsonify({'message': 'Invalid credentials'}), 401
+
+@api_bp.route('/jobs', methods=['POST'])
+@jwt_required()
+def create_job():
+    current_user_id = get_jwt_identity()
+    data = request.get_json()
+
+    title = data.get('title')
+    description = data.get('description')
+
+    if not title or not description:
+        return jsonify({'message': 'Title and description are required'}), 400
+
+    new_job = JobPosting(
+        title=title,
+        description=description,
+        user_id=current_user_id
+    )
+
+    db.session.add(new_job)
+    db.session.commit()
+
+    return jsonify({'message': 'Job posting created successfully', 'job_id': new_job.id}), 201
