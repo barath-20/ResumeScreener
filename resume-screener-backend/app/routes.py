@@ -157,3 +157,27 @@ def upload_resume(job_id):
         }), 201
 
     return jsonify({'message': 'File upload failed'}), 500
+
+@api_bp.route('/jobs/<int:job_id>/candidates', methods=['GET'])
+@jwt_required()
+def get_candidates(job_id):
+    current_user_id = get_jwt_identity()
+    job = JobPosting.query.get(job_id)
+
+    if not job:
+        return jsonify({'message': 'Job not found'}), 404
+    if job.user_id != current_user_id:
+        return jsonify({'message': 'Access forbidden'}), 403
+
+    # Query candidates and order them by score, descending
+    candidates = Candidate.query.filter_by(job_id=job_id).order_by(Candidate.match_score.desc()).all()
+
+    candidate_list = []
+    for candidate in candidates:
+        candidate_list.append({
+            'id': candidate.id,
+            'name': candidate.name,
+            'match_score': candidate.match_score
+        })
+
+    return jsonify(candidate_list), 200
