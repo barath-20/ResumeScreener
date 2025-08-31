@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import apiClient from '../services/api';
 import './CreateJobForm.css';
 
-function CreateJobForm() {
+function CreateJobForm({ onJobCreated }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -14,6 +14,9 @@ function CreateJobForm() {
       // Clear the form
       setTitle('');
       setDescription('');
+      if (onJobCreated) {
+        onJobCreated(); // Call the refresh function
+      }
     } catch (error) {
       alert('Failed to create job posting: ' + (error.response?.data?.message || error.message));
     }

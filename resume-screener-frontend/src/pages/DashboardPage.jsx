@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateJobForm from '../components/CreateJobForm';
+import JobList from '../components/JobList';
 
 function DashboardPage() {
   const navigate = useNavigate();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
+  };
+
+  const handleJobCreated = () => {
+    // Increment the key to trigger a refresh in JobList
+    setRefreshKey(oldKey => oldKey + 1);
   };
 
   return (
@@ -17,8 +24,9 @@ function DashboardPage() {
         <button onClick={handleLogout}>Logout</button>
       </nav>
       <main style={{ padding: '1rem' }}>
-        <CreateJobForm />
-        {/* Job postings list will go here later */}
+        <CreateJobForm onJobCreated={handleJobCreated} />
+        <hr style={{ margin: '2rem 0' }} />
+        <JobList refreshKey={refreshKey} />
       </main>
     </div>
   );

@@ -64,3 +64,19 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
+.job-list-container {
+  margin-top: 2rem;
+}
+
+.job-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.job-card h4 {
+  margin-top: 0;
+}
