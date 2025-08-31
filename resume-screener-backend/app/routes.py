@@ -4,6 +4,7 @@ from . import db, bcrypt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 import os
 from werkzeug.utils import secure_filename
+from .scorer import process_resume
 
 api_bp = Blueprint('api', __name__)
 
@@ -127,20 +128,32 @@ def upload_resume(job_id):
 
     if file:
         filename = secure_filename(file.filename)
-        # Create a unique path for the file
         job_upload_path = os.path.join(current_app.root_path, '..', 'uploads', str(job_id))
         os.makedirs(job_upload_path, exist_ok=True)
         filepath = os.path.join(job_upload_path, filename)
         file.save(filepath)
 
-        # Create a new candidate record
+        # Process the resume
+        processing_results = process_resume(filepath, job)
+        if 'error' in processing_results:
+            # Still create a candidate, but log the error or handle it as needed
+            # For now, we'll just return an error to the user
+            return jsonify({'message': f"File uploaded, but processing failed: {processing_results['error']}"}), 500
+
+        # Create and populate the candidate record
         new_candidate = Candidate(
-            job_id=job_id
-            # We will process the name, text, and score in the next step
+            job_id=job_id,
+            name=processing_results.get('name', 'Unknown'),
+            resume_text=processing_results.get('resume_text'),
+            match_score=processing_results.get('match_score')
         )
         db.session.add(new_candidate)
         db.session.commit()
 
-        return jsonify({'message': 'Resume uploaded successfully', 'candidate_id': new_candidate.id}), 201
+        return jsonify({
+            'message': 'Resume uploaded and processed successfully',
+            'candidate_id': new_candidate.id,
+            'match_score': new_candidate.match_score
+        }), 201
 
     return jsonify({'message': 'File upload failed'}), 500
