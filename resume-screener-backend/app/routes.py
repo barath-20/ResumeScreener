@@ -64,3 +64,21 @@ def create_job():
     db.session.commit()
 
     return jsonify({'message': 'Job posting created successfully', 'job_id': new_job.id}), 201
+
+@api_bp.route('/jobs', methods=['GET'])
+@jwt_required()
+def get_jobs():
+    current_user_id = get_jwt_identity()
+
+    jobs = JobPosting.query.filter_by(user_id=current_user_id).order_by(JobPosting.id.desc()).all()
+
+    job_list = []
+    for job in jobs:
+        job_list.append({
+            'id': job.id,
+            'title': job.title,
+            'description': job.description,
+            'user_id': job.user_id
+        })
+
+    return jsonify(job_list), 200
