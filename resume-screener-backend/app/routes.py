@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from .models import User
 from . import db, bcrypt
+from flask_jwt_extended import create_access_token
 
 api_bp = Blueprint('api', __name__)
 
@@ -26,3 +27,17 @@ def register():
     db.session.commit()
 
     return jsonify({'message': 'User registered successfully'}), 201
+
+@api_bp.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email', None)
+    password = data.get('password', None)
+
+    user = User.query.filter_by(email=email).first()
+
+    if user and bcrypt.check_password_hash(user.password_hash, password):
+        access_token = create_access_token(identity=user.id)
+        return jsonify(access_token=access_token), 200
+
+    return jsonify({'message': 'Invalid credentials'}), 401
