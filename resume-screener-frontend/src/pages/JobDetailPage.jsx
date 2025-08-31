@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import apiClient from '../services/api';
+import ResumeUploadForm from '../components/ResumeUploadForm';
+import CandidateList from '../components/CandidateList';
 
 function JobDetailPage() {
-  const { jobId } = useParams(); // Get the job ID from the URL
+  const { jobId } = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [refreshKey, setRefreshKey] = useState(0); // State to trigger refresh
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -31,12 +34,23 @@ function JobDetailPage() {
   if (!job) return <p>Job not found.</p>;
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: '2rem', maxWidth: '800px', margin: 'auto' }}>
       <Link to="/">&larr; Back to Dashboard</Link>
-      <hr style={{ margin: '1rem 0' }} />
-      <h1>{job.title}</h1>
-      <p style={{ whiteSpace: 'pre-wrap' }}>{job.description}</p>
-      {/* Resume upload and candidate list will go here later */}
+      <div style={{ background: 'white', padding: '2rem', marginTop: '1rem', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+        <h1>{job.title}</h1>
+        <p style={{ whiteSpace: 'pre-wrap', borderTop: '1px solid #eee', paddingTop: '1rem' }}>{job.description}</p>
+      </div>
+
+      <hr style={{ margin: '2rem 0' }} />
+
+      <ResumeUploadForm 
+        jobId={jobId} 
+        onUploadSuccess={() => setRefreshKey(oldKey => oldKey + 1)} 
+      />
+
+      <hr style={{ margin: '2rem 0' }} />
+
+      <CandidateList jobId={jobId} refreshKey={refreshKey} />
     </div>
   );
 }
