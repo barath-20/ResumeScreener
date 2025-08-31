@@ -1,7 +1,9 @@
-from flask import Blueprint, request, jsonify
-from .models import User, JobPosting
+from flask import Blueprint, request, jsonify, current_app
+from .models import User, JobPosting, Candidate
 from . import db, bcrypt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+import os
+from werkzeug.utils import secure_filename
 
 api_bp = Blueprint('api', __name__)
 
@@ -105,3 +107,40 @@ def get_job(job_id):
     }
 
     return jsonify(job_data), 200
+
+@api_bp.route('/jobs/<int:job_id>/upload', methods=['POST'])
+@jwt_required()
+def upload_resume(job_id):
+    current_user_id = get_jwt_identity()
+    job = JobPosting.query.get(job_id)
+
+    if not job:
+        return jsonify({'message': 'Job not found'}), 404
+    if job.user_id != current_user_id:
+        return jsonify({'message': 'Access forbidden'}), 403
+    if 'resume' not in request.files:
+        return jsonify({'message': 'No resume file part'}), 400
+
+    file = request.files['resume']
+    if file.filename == '':
+        return jsonify({'message': 'No selected file'}), 400
+
+    if file:
+        filename = secure_filename(file.filename)
+        # Create a unique path for the file
+        job_upload_path = os.path.join(current_app.root_path, '..', 'uploads', str(job_id))
+        os.makedirs(job_upload_path, exist_ok=True)
+        filepath = os.path.join(job_upload_path, filename)
+        file.save(filepath)
+
+        # Create a new candidate record
+        new_candidate = Candidate(
+            job_id=job_id
+            # We will process the name, text, and score in the next step
+        )
+        db.session.add(new_candidate)
+        db.session.commit()
+
+        return jsonify({'message': 'Resume uploaded successfully', 'candidate_id': new_candidate.id}), 201
+
+    return jsonify({'message': 'File upload failed'}), 500
