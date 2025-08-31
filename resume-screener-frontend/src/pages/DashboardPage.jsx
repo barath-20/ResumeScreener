@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import CreateJobForm from '../components/CreateJobForm';
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -11,12 +12,13 @@ function DashboardPage() {
 
   return (
     <div>
-      <nav style={{ padding: '1rem', background: '#eee', display: 'flex', justifyContent: 'space-between' }}>
+      <nav style={{ padding: '1rem', background: '#eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Dashboard</h1>
         <button onClick={handleLogout}>Logout</button>
       </nav>
       <main style={{ padding: '1rem' }}>
-        <p>Welcome to your dashboard. The resume screening features will be built here!</p>
+        <CreateJobForm />
+        {/* Job postings list will go here later */}
       </main>
     </div>
   );
