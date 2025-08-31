@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import apiClient from '../services/api';
 
 function JobList({ refreshKey }) {
@@ -34,10 +35,12 @@ function JobList({ refreshKey }) {
         <p>You haven't created any job postings yet.</p>
       ) : (
         jobs.map((job) => (
-          <div key={job.id} className="job-card">
-            <h4>{job.title}</h4>
-            <p>{job.description.substring(0, 150)}...</p>
-          </div>
+          <Link to={`/jobs/${job.id}`} key={job.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <div className="job-card">
+              <h4>{job.title}</h4>
+              <p>{job.description.substring(0, 150)}...</p>
+            </div>
+          </Link>
         ))
       )}
     </div>

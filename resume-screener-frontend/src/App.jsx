@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
-import ProtectedRoute from './components/ProtectedRoute'; // <-- Import ProtectedRoute
+import JobDetailPage from './pages/JobDetailPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -18,6 +19,14 @@ function App() {
               <DashboardPage />
             </ProtectedRoute>
           } 
+        />
+        <Route 
+          path="/jobs/:jobId"
+          element={
+            <ProtectedRoute>
+              <JobDetailPage />
+            </ProtectedRoute>
+          }
         />
       </Routes>
     </Router>
