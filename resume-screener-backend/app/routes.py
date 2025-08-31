@@ -82,3 +82,26 @@ def get_jobs():
         })
 
     return jsonify(job_list), 200
+
+@api_bp.route('/jobs/<int:job_id>', methods=['GET'])
+@jwt_required()
+def get_job(job_id):
+    current_user_id = get_jwt_identity()
+
+    job = JobPosting.query.get(job_id)
+
+    if not job:
+        return jsonify({'message': 'Job posting not found'}), 404
+
+    # Security check: Ensure the job belongs to the current user
+    if job.user_id != current_user_id:
+        return jsonify({'message': 'Access forbidden'}), 403
+
+    job_data = {
+        'id': job.id,
+        'title': job.title,
+        'description': job.description,
+        'user_id': job.user_id
+    }
+
+    return jsonify(job_data), 200
