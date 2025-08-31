@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import apiClient from '../services/api';
 
 function RegisterPage() {
@@ -51,6 +51,9 @@ function RegisterPage() {
           />
         </div>
         <button type="submit">Register</button>
+        <p style={{ textAlign: 'center', marginTop: '1rem' }}>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
       </form>
     </div>
   );
