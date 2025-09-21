@@ -83,20 +83,20 @@ function DashboardPage() {
   };
 
   const StatCard = ({ title, value, icon: Icon, color, trend }) => (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card className="hover:shadow-lg transition-shadow min-w-0">
       <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-3xl font-bold">{value}</p>
+        <div className="flex items-center justify-between min-w-0">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+            <p className="text-3xl font-bold truncate">{value}</p>
             {trend && (
               <div className="flex items-center gap-1 mt-1">
-                <TrendingUp className="h-3 w-3 text-green-600" />
-                <span className="text-xs text-green-600 font-medium">{trend}</span>
+                <TrendingUp className="h-3 w-3 text-green-600 flex-shrink-0" />
+                <span className="text-xs text-green-600 font-medium truncate">{trend}</span>
               </div>
             )}
           </div>
-          <div className={`p-3 rounded-lg ${
+          <div className={`p-3 rounded-lg flex-shrink-0 ${
             color === 'blue' ? 'bg-blue-100' :
             color === 'green' ? 'bg-green-100' :
             color === 'yellow' ? 'bg-yellow-100' :
@@ -120,22 +120,22 @@ function DashboardPage() {
     <div className="min-h-screen bg-background">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      <div className="md:ml-64">
-        <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container mx-auto px-4">
+      <div className="md:ml-64 min-h-screen">
+        <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
+          <div className="container mx-auto px-4 max-w-7xl">
             <div className="flex h-16 items-center justify-between">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 min-w-0">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setSidebarOpen(true)}
-                  className="md:hidden"
+                  className="md:hidden flex-shrink-0"
                 >
                   <Menu className="h-4 w-4" />
                 </Button>
-                <h1 className="text-xl font-bold text-primary">Resume Screener</h1>
+                <h1 className="text-xl font-bold text-primary truncate">Resume Screener</h1>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 flex-shrink-0">
                 <Badge variant="outline" className="hidden sm:flex">
                   Welcome, {user?.name || user?.email || 'User'}
                 </Badge>
@@ -144,84 +144,84 @@ function DashboardPage() {
           </div>
         </nav>
         
-        <main className="container mx-auto px-4 py-8">
-        <div className="space-y-8">
-          {/* Welcome Header */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-6 w-6" />
-                Dashboard
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-lg text-muted-foreground">
-                Welcome back, <span className="font-semibold text-foreground">{user?.name || user?.email || 'User'}</span>! 
-                Create job postings and manage your resume screening process.
-              </p>
-            </CardContent>
-          </Card>
+        <main className="container mx-auto px-4 py-8 max-w-7xl overflow-x-hidden">
+          <div className="space-y-8">
+            {/* Welcome Header */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="h-6 w-6" />
+                  Dashboard
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-lg text-muted-foreground">
+                  Welcome back, <span className="font-semibold text-foreground">{user?.name || user?.email || 'User'}</span>! 
+                  Create job postings and manage your resume screening process.
+                </p>
+              </CardContent>
+            </Card>
 
-          {/* Stats Cards */}
-          {!loading && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <StatCard 
-                title="Total Jobs" 
-                value={stats.totalJobs} 
-                icon={Briefcase} 
-                color="blue"
-                trend="+12% this month"
-              />
-              <StatCard 
-                title="Applications" 
-                value={stats.totalCandidates} 
-                icon={Users} 
-                color="green"
-                trend="+23% this week"
-              />
-              <StatCard 
-                title="High Matches" 
-                value={stats.highMatches} 
-                icon={Star} 
-                color="yellow"
-                trend="+8% this week"
-              />
-              <StatCard 
-                title="Avg Score" 
-                value={`${stats.avgScore}%`} 
-                icon={BarChart3} 
-                color="purple"
-                trend="+5% improvement"
-              />
-            </div>
-          )}
-          
-          {/* Create Job Form */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5" />
-                Create New Job Posting
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CreateJobForm onJobCreated={handleJobCreated} />
-            </CardContent>
-          </Card>
-          
-          {/* Job List */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Briefcase className="h-5 w-5" />
-                Your Job Postings
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <JobList refreshKey={refreshKey} />
-            </CardContent>
-          </Card>
-        </div>
+            {/* Stats Cards */}
+            {!loading && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <StatCard 
+                  title="Total Jobs" 
+                  value={stats.totalJobs} 
+                  icon={Briefcase} 
+                  color="blue"
+                  trend="+12% this month"
+                />
+                <StatCard 
+                  title="Applications" 
+                  value={stats.totalCandidates} 
+                  icon={Users} 
+                  color="green"
+                  trend="+23% this week"
+                />
+                <StatCard 
+                  title="High Matches" 
+                  value={stats.highMatches} 
+                  icon={Star} 
+                  color="yellow"
+                  trend="+8% this week"
+                />
+                <StatCard 
+                  title="Avg Score" 
+                  value={`${stats.avgScore}%`} 
+                  icon={BarChart3} 
+                  color="purple"
+                  trend="+5% improvement"
+                />
+              </div>
+            )}
+            
+            {/* Create Job Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plus className="h-5 w-5" />
+                  Create New Job Posting
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CreateJobForm onJobCreated={handleJobCreated} />
+              </CardContent>
+            </Card>
+            
+            {/* Job List */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Briefcase className="h-5 w-5" />
+                  Your Job Postings
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <JobList refreshKey={refreshKey} />
+              </CardContent>
+            </Card>
+          </div>
         </main>
       </div>
     </div>
