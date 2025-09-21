@@ -1,0 +1,26 @@
+{
+  "name": "resume-screener-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Resume Screener application",
+  "main": "run.py",
+  "scripts": {
+    "dev": "flask run --debug",
+    "start": "python run.py",
+    "migrate": "flask db upgrade",
+    "migrate-create": "flask db migrate -m",
+    "reset-db": "python reset_db.py"
+  },
+  "keywords": [
+    "flask",
+    "python",
+    "resume",
+    "screener",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
+

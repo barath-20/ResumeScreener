@@ -1,11 +1,20 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem('token');
+  const { isAuthenticated, loading } = useAuth();
 
-  if (!token) {
-    // If no token, redirect to login page
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
 
