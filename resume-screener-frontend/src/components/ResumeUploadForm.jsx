@@ -64,31 +64,34 @@ function ResumeUploadForm({ jobId, onUploadSuccess }) {
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="min-h-[300px]">
+      <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2">
           <Upload className="h-5 w-5" />
           Upload Resume
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
+      <CardContent className="pt-2">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="space-y-4">
             <Label htmlFor="resume-file" className="text-sm font-medium">
               Select PDF Resume
             </Label>
-            <div className="relative">
+            <div className="space-y-2">
               <Input
                 id="resume-file"
                 type="file"
                 accept=".pdf"
                 onChange={handleFileChange}
                 disabled={isUploading}
-                className="file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                className="h-16 cursor-pointer file:mr-4 file:my-1 file:py-4 file:px-6 file:rounded-md file:border-0 file:text-base file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 file:cursor-pointer border-2 border-dashed border-gray-300 hover:border-primary transition-colors rounded-md"
               />
+              <p className="text-xs text-gray-500">
+                Click to browse or drag and drop your PDF resume here
+              </p>
             </div>
             {file && (
-              <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-md">
+              <div className="flex items-center gap-2 p-4 bg-green-50 border border-green-200 rounded-md">
                 <CheckCircle className="h-4 w-4 text-green-600" />
                 <span className="text-sm text-green-800 font-medium">
                   Selected: {file.name}
@@ -100,7 +103,7 @@ function ResumeUploadForm({ jobId, onUploadSuccess }) {
           <Button 
             type="submit" 
             disabled={isUploading || !file} 
-            className="w-full"
+            className="w-full h-12 text-base font-semibold shadow-lg hover:shadow-xl transition-shadow"
             size="lg"
           >
             {isUploading ? (
@@ -118,7 +121,7 @@ function ResumeUploadForm({ jobId, onUploadSuccess }) {
         </form>
         
         {message && (
-          <div className={`mt-4 p-4 rounded-md flex items-center gap-2 ${
+          <div className={`mt-6 p-4 rounded-md flex items-center gap-2 ${
             messageType === 'error' 
               ? 'bg-red-50 border border-red-200 text-red-800' 
               : 'bg-green-50 border border-green-200 text-green-800'

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Search, User, Calendar, FileText, Trophy, Star } from 'lucide-react';
+import { Search, User, Calendar, FileText, Trophy, Star, Upload } from 'lucide-react';
 import apiClient from '../services/api';
 
 function CandidateList({ jobId, refreshKey }) {
@@ -120,10 +120,18 @@ function CandidateList({ jobId, refreshKey }) {
       </CardHeader>
       <CardContent>
         {candidates.length === 0 ? (
-          <div className="text-center py-12">
-            <User className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No candidates yet</h3>
-            <p className="text-muted-foreground">Upload resumes above to see candidate rankings.</p>
+          <div className="text-center py-16">
+            <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
+              <User className="h-12 w-12 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-semibold mb-3 text-foreground">No candidates yet</h3>
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              Upload resumes using the form above to start screening candidates and see their match scores.
+            </p>
+            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <Upload className="h-4 w-4" />
+              <span>Use the upload form above to get started</span>
+            </div>
           </div>
         ) : filteredAndSortedCandidates.length === 0 ? (
           <div className="text-center py-12">

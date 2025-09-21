@@ -156,6 +156,40 @@ def get_job(job_id):
         'created_by': job.created_by
     })
 
+@api_bp.route('/jobs/<int:job_id>', methods=['DELETE'])
+@jwt_required()
+def delete_job(job_id):
+    job = JobPosting.query.get_or_404(job_id)
+    
+    # Check if user has permission to delete this job
+    current_user_id = get_jwt_identity()
+    if job.created_by != current_user_id:
+        return jsonify({'error': 'You can only delete jobs you created'}), 403
+    
+    try:
+        # Delete associated candidates and their files
+        candidates = Candidate.query.filter_by(job_id=job_id).all()
+        for candidate in candidates:
+            # Delete the file if it exists
+            if candidate.file_path and os.path.exists(candidate.file_path):
+                try:
+                    os.remove(candidate.file_path)
+                except OSError:
+                    pass  # File might already be deleted
+            
+            # Delete candidate record
+            db.session.delete(candidate)
+        
+        # Delete the job
+        db.session.delete(job)
+        db.session.commit()
+        
+        return jsonify({'message': 'Job deleted successfully'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to delete job', 'details': str(e)}), 500
+
 # Resume Upload and Processing
 @api_bp.route('/jobs/<int:job_id>/upload', methods=['POST'])
 @jwt_required()

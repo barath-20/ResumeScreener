@@ -146,8 +146,20 @@ function AnalyticsPage() {
               </div>
             )}
           </div>
-          <div className={`p-3 rounded-lg bg-${color}-100`}>
-            <Icon className={`h-6 w-6 text-${color}-600`} />
+          <div className={`p-3 rounded-lg ${
+            color === 'blue' ? 'bg-blue-100' :
+            color === 'green' ? 'bg-green-100' :
+            color === 'yellow' ? 'bg-yellow-100' :
+            color === 'purple' ? 'bg-purple-100' :
+            'bg-gray-100'
+          }`}>
+            <Icon className={`h-6 w-6 ${
+              color === 'blue' ? 'text-blue-600' :
+              color === 'green' ? 'text-green-600' :
+              color === 'yellow' ? 'text-yellow-600' :
+              color === 'purple' ? 'text-purple-600' :
+              'text-gray-600'
+            }`} />
           </div>
         </div>
       </CardContent>
@@ -158,30 +170,31 @@ function AnalyticsPage() {
     <div className="min-h-screen bg-background">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarOpen(true)}
-                className="md:hidden"
-              >
-                <Menu className="h-4 w-4" />
-              </Button>
-              <h1 className="text-xl font-bold text-primary">Resume Screener</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <Badge variant="outline" className="hidden sm:flex">
-                Welcome, {user?.name || user?.email || 'User'}
-              </Badge>
+      <div className="md:ml-64">
+        <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container mx-auto px-4">
+            <div className="flex h-16 items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSidebarOpen(true)}
+                  className="md:hidden"
+                >
+                  <Menu className="h-4 w-4" />
+                </Button>
+                <h1 className="text-xl font-bold text-primary">Resume Screener</h1>
+              </div>
+              <div className="flex items-center gap-4">
+                <Badge variant="outline" className="hidden sm:flex">
+                  Welcome, {user?.name || user?.email || 'User'}
+                </Badge>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
-      
-      <main className="container mx-auto px-4 py-8">
+        </nav>
+        
+        <main className="container mx-auto px-4 py-8">
         <div className="space-y-8">
           {/* Header */}
           <Card>
@@ -358,7 +371,8 @@ function AnalyticsPage() {
             </CardContent>
           </Card>
         </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
